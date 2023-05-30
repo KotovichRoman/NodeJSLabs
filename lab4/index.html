@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Lab4</title>
+</head>
+<body>
+    <h2>Get All Rows</h2>
+    <button onclick="getAllRows()">Get All Rows</button>
+    <p id="getAllRowsResult"></p>
+
+    <h2>Add New Row</h2>
+    <label for="addNameInput">Name:</label>
+    <input type="text" id="addNameInput">
+    <br>
+    <label for="addBdayInput">Birthday:</label>
+    <input type="date" id="addBdayInput">
+    <br>
+    <button onclick="addNewRow()">Add New Row</button>
+    <p id="addNewRowResult"></p>
+
+    <h2>Update Row</h2>
+    <label for="updateIdInput">ID:</label>
+    <input type="text" id="updateIdInput">
+    <br>
+    <label for="updateNameInput">Name:</label>
+    <input type="text" id="updateNameInput">
+    <br>
+    <label for="updateBdayInput">Birthday:</label>
+    <input type="date" id="updateBdayInput">
+    <br>
+    <button onclick="updateRow()">Update Row</button>
+    <p id="updateRowResult"></p>
+
+    <h2>Delete Row</h2>
+    <label for="deleteIdInput">ID:</label>
+    <input type="text" id="deleteIdInput">
+    <br>
+    <button onclick="deleteRow()">Delete Row</button>
+    <p id="deleteRowResult"></p>
+
+<script>
+    function sendHttpRequest(method, url, data) {
+        return fetch(url, {
+            method: method,
+            body: JSON.stringify(data),
+            headers: data ? { 'Content-Type': 'application/json' } : {}
+        }).then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('Something went wrong');
+            }
+        });
+    }
+
+    function getAllRows() {
+        sendHttpRequest('GET', 'http://localhost:5000/api/db')
+            .then(data => {
+                document.getElementById('getAllRowsResult').innerHTML = JSON.stringify(data);
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    }
+
+    function addNewRow() {
+        const name = document.getElementById('addNameInput').value;
+        const bday = document.getElementById('addBdayInput').value;
+
+        sendHttpRequest('POST', 'http://localhost:5000/api/db', { name: name, bday: bday })
+            .then(data => {
+                document.getElementById('addNewRowResult').innerHTML = JSON.stringify(data);
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    }
+
+    function updateRow() {
+        const id = document.getElementById('updateIdInput').value;
+        const name = document.getElementById('updateNameInput').value;
+        const bday = document.getElementById('updateBdayInput').value;
+
+        sendHttpRequest('PUT', 'http://localhost:5000/api/db', { id: id, name: name, bday: bday })
+            .then(data => {
+                document.getElementById('updateRowResult').innerHTML = JSON.stringify(data);
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    }
+
+    function deleteRow() {
+        const id = document.getElementById('deleteIdInput').value;
+
+        sendHttpRequest('DELETE', `http://localhost:5000/api/db?id=${id}`)
+            .then(data => {
+                document.getElementById('deleteRowResult').innerHTML = JSON.stringify(data);
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    }
+</script>
+</body>
+</html>

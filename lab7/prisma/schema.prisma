@@ -1,0 +1,36 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model pizzas {
+  id                                            Int       @id @default(autoincrement())
+  name                                          String?   @db.VarChar(255)
+  calories                                      Float?
+  turtles_turtles_favoritepizzaidTopizzas       turtles[] @relation("turtles_favoritepizzaidTopizzas")
+  turtles_turtles_secondfavoritepizzaidTopizzas turtles[] @relation("turtles_secondfavoritepizzaidTopizzas")
+}
+
+model turtles {
+  id                                           Int      @id @default(autoincrement())
+  name                                         String?  @db.VarChar(255)
+  color                                        String?  @db.VarChar(255)
+  weaponid                                     Int?
+  favoritepizzaid                              Int?
+  secondfavoritepizzaid                        Int?
+  image                                        String?  @db.VarChar(255)
+  pizzas_turtles_favoritepizzaidTopizzas       pizzas?  @relation("turtles_favoritepizzaidTopizzas", fields: [favoritepizzaid], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  pizzas_turtles_secondfavoritepizzaidTopizzas pizzas?  @relation("turtles_secondfavoritepizzaidTopizzas", fields: [secondfavoritepizzaid], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  weapons                                      weapons? @relation(fields: [weaponid], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model weapons {
+  id      Int       @id @default(autoincrement())
+  name    String?   @db.VarChar(255)
+  dps     Int?
+  turtles turtles[]
+}

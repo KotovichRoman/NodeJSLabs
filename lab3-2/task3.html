@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Promise 3</title>
+  </head>
+  <body>
+    <div>
+      <div>Строка</div>
+      <div id="error1"></div>
+      <br />
+      <div>Чётныое</div>
+      <div id="even1"></div>
+      <br />
+      <div>Нечётное</div>
+      <div id="odd1"></div>
+    </div>
+    <br />
+    <div>
+      <div>Строка</div>
+      <div id="error2"></div>
+      <br />
+      <div>Чётныое</div>
+      <div id="even2"></div>
+      <br />
+      <div>Нечётное</div>
+      <div id="odd2"></div>
+    </div>
+    <script>
+      const error1 = document.getElementById('error1');
+      const even1 = document.getElementById('even1');
+      const odd1 = document.getElementById('odd1');
+
+      const error2 = document.getElementById('error2');
+      const even2 = document.getElementById('even2');
+      const odd2 = document.getElementById('odd2');
+
+      function ThirdJob(data) {
+        return new Promise((resolve, reject) => {
+          if (typeof data !== "number") {
+            reject("error");
+          }
+          else {
+            if (data % 2 === 0) {
+              setTimeout(() => {
+                reject("even");
+              }, 2000);
+            } else {
+              setTimeout(() => {
+                resolve("odd");
+              }, 1000);
+            }
+          }
+        });
+      }
+
+      async function callThirdJob(value, blockName) {
+        try {
+          const result = await ThirdJob(value);
+          blockName.textContent = result.toString();
+        } catch (error) {
+          blockName.textContent = error;
+        }
+      }
+
+      ThirdJob('opa')
+              .then(result => {
+                console.log(result);
+                error1.textContent = result.toString();
+              })
+              .catch(error => {
+                console.log(error);
+                error1.textContent = error.toString();
+              });
+
+      ThirdJob(10)
+              .then(result => {
+                console.log(result);
+                even1.textContent = result.toString();
+              })
+              .catch(error => {
+                console.log(error);
+                even1.textContent = error.toString();
+              });
+
+      ThirdJob(11)
+              .then(result => {
+                console.log(result);
+                odd1.textContent = result.toString();
+              })
+              .catch(error => {
+                console.log(error);
+                odd1.textContent = error.toString();
+              });
+
+      callThirdJob('opa', error2);
+      callThirdJob(10, even2);
+      callThirdJob(11, odd2);
+    </script>
+  </body>
+</html>

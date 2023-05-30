@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Черепашки-ниндзя</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      .container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-evenly;
+        margin-top: 100px;
+      }
+
+      .card {
+        text-align: center;
+        width: 15%;
+      }
+
+      .card img {
+        height: 200px;
+        width: 200px;
+      }
+
+      .pagination {
+        display: flex;
+        justify-content: center;
+        margin-top: 300px;
+      }
+
+      .pagination button {
+        margin: 0 10px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>Черепашки-ниндзя</h1>
+
+    <div class="container"></div>
+
+    <div class="pagination"></div>
+
+    <script>
+      let turtles = [];
+
+      fetch("http://localhost:3000/api/turtles")
+        .then((response) => response.json())
+        .then((data) => {
+          turtles = data;
+          console.log(data);
+          showPage(1);
+        })
+        .then()
+        .catch((error) => console.error(error));
+
+      const itemsPerPage = 3;
+
+      function createTurtleCard(turtle) {
+        const card = document.createElement("div");
+        card.classList.add("card");
+
+        const img = document.createElement("img");
+        img.src = turtle.image || "https://via.placeholder.com/200x200";
+        img.alt = turtle.name;
+        card.appendChild(img);
+
+        const name = document.createElement("h2");
+        name.textContent = turtle.name;
+        card.appendChild(name);
+
+        const id = document.createElement("p");
+        id.textContent = `ID: ${turtle.id}`;
+        card.appendChild(id);
+
+        const color = document.createElement("p");
+        color.textContent = `Color: ${turtle.color}`;
+        card.appendChild(color);
+
+        const weapon = document.createElement("p");
+        weapon.textContent = `Weapon: ${turtle.weaponid}`;
+        card.appendChild(weapon);
+
+        return card;
+      }
+
+      function createPaginationButton(pageNumber, isActive = false) {
+        const button = document.createElement("button");
+        button.textContent = pageNumber;
+        if (isActive) {
+          button.disabled = true;
+        } else {
+          button.addEventListener("click", () => showPage(pageNumber));
+        }
+        return button;
+      }
+
+      function showPage(pageNumber) {
+        const startIndex = (pageNumber - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+
+        const container = document.querySelector(".container");
+        container.innerHTML = "";
+
+        for (let i = startIndex; i < endIndex && i < turtles.length; i++) {
+          container.appendChild(createTurtleCard(turtles[i]));
+        }
+
+        const pagination = document.querySelector(".pagination");
+        pagination.innerHTML = "";
+
+        const totalPages = Math.ceil(turtles.length / itemsPerPage);
+
+        for (let i = 1; i <= totalPages; i++) {
+          pagination.appendChild(createPaginationButton(i, i === pageNumber));
+        }
+      }
+    </script>
+  </body>
+</html>

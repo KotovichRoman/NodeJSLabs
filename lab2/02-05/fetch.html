@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+      <meta charset="UTF-8">
+      <title>02-05</title>
+  </head>
+  <body>
+    <div id="fio"></div>
+  </body>
+  <script>
+    let element = document.getElementById("fio");
+
+    fetch('/api/name')
+        .then(response => response.text())
+        .then(data => element.textContent = data)
+  </script>
+</html>

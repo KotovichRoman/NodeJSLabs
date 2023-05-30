@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Factorial Calculator</title>
+</head>
+<body>
+<h1>Factorial Calculator</h1>
+<ul id="results"></ul>
+<h2 id="totalTime"></h2>
+<script>
+    const resultsList = document.getElementById('results');
+    const totalTimeElement = document.getElementById('totalTime');
+    const startTime = Date.now();
+
+    for (let x = 1; x <= 20; x++) {
+        fetch(`/fact?k=${x}`)
+            .then(response => response.json())
+            .then(data => {
+                const fact = data.fact;
+                const elapsedTime = Date.now() - startTime;
+                totalTimeElement.innerHTML = "Total: " + elapsedTime + " ms";
+                const result = `${elapsedTime}ms - ${x}! = ${fact}`;
+                const listItem = document.createElement('li');
+                listItem.textContent = result;
+                resultsList.appendChild(listItem);
+            })
+            .catch(error => console.error(error));
+    }
+</script>
+</body>
+</html>

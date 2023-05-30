@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+      <meta charset="UTF-8">
+      <title>Promise 4</title>
+  </head>
+  <body>
+    <div>
+        <div id="card1"></div>
+        <br />
+        <div id="card2"></div>
+    </div>
+    <script>
+      const card1 = document.getElementById('card1');
+      const card2 = document.getElementById('card2');
+
+      function validateCard(cardNumber, cardBlock) {
+        cardBlock.textContent = `Card number: ${cardNumber}`
+        return Math.random() < 0.5;
+      }
+
+      function CreateOrder(cardNumber, cardBlock) {
+        return new Promise((resolve, reject) => {
+          if (validateCard(cardNumber, cardBlock)) {
+            reject('Card is not valid');
+          } else {
+            setTimeout(() => {
+                resolve(Math.random().toString(36).substring(2));
+            }, 5000);
+          }
+        });
+      }
+
+      function proceedToPayment(orderId, cardBlock) {
+          cardBlock.textContent += ` Order ID: ${orderId}`;
+          return new Promise((resolve, reject) => {
+              setTimeout(() => {
+                  if (Math.random() < 0.5) {
+                      reject('Payment failed');
+                  } else {
+                      resolve('Payment successful');
+                  }
+              }, 3000);
+          });
+      }
+
+      async function createAndProcessOrder() {
+          try {
+              const orderNumber = await CreateOrder('1234 5678 9012 3456', card2);
+              const result = await proceedToPayment(orderNumber, card2);
+              console.log(result);
+              card2.textContent += ` ${result}`;
+          } catch (error) {
+              console.log(error.message);
+              card2.textContent += ` ${error}`;
+          }
+      }
+
+      CreateOrder('1234 5678 9012 3456', card1)
+          .then((orderId) => {
+              return proceedToPayment(orderId, card1);
+          })
+          .then((result) => {
+              console.log(result);
+              card1.textContent += ` ${result}`;
+          })
+          .catch((error) => {
+              console.log(error.message);
+              card1.textContent += ` ${error}`;
+          });
+
+      createAndProcessOrder();
+    </script>
+  </body>
+</html>

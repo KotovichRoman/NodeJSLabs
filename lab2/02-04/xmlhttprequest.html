@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>02-04</title>
+    </head>
+    <body>
+        <div id="fio"></div>
+    </body>
+    <script>
+        let request = new XMLHttpRequest();
+        let element = document.getElementById("fio");
+
+        request.open('GET', "http://localhost:5004/api/name", true);
+        request.send();
+
+        request.onload = function() {
+            element.textContent = request.responseText;
+        };
+    </script>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Promise 5</title>
+  </head>
+  <body>
+    <div>
+      <div id="result"></div>
+    </div>
+    <script>
+      const result = document.getElementById('result');
+
+      function calculateSquare(num) {
+        return new Promise((resolve, reject) => {
+          if (typeof num !== 'number') {
+            reject(new Error("error"));
+          } else {
+            resolve(num ** 2);
+          }
+        });
+      }
+
+      function calculateTwoPower(num) {
+        return new Promise((resolve, reject) => {
+          if (typeof num !== 'number') {
+            reject('error');
+          } else {
+            resolve(num ** 3);
+          }
+        });
+      }
+
+      function calculateFourthPower(num) {
+        return new Promise((resolve, reject) => {
+          if (typeof num !== 'number') {
+            reject('error');
+          } else {
+            resolve(num ** 4);
+          }
+        });
+      }
+
+      Promise.all([calculateSquare("asd"), calculateTwoPower(3), calculateFourthPower(4)])
+              .then((results) => {
+                console.log(results);
+                result.textContent = results.toString();
+              })
+              .catch((error) => {
+                console.log(error.message);
+              });
+    </script>
+  </body>
+</html>

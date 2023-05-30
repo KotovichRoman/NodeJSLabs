@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Promise 2</title>
+  </head>
+  <body>
+    <div id="result1"></div>
+    <div id="result2"></div>
+    <script>
+      const result1 = document.getElementById('result1');
+      const result2 = document.getElementById('result2');
+
+      function SecondJob() {
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            reject('Something went wrong');
+          }, 3000);
+        });
+      }
+
+      async function callSecondJob() {
+        try {
+          const result = await SecondJob();
+          result2.textContent = result.toString();
+        } catch (error) {
+          result2.textContent = error;
+        }
+      }
+
+      SecondJob()
+              .then(result => {
+                console.log(result);
+                result1.textContent = result.toString();
+              })
+              .catch(error => {
+                console.log(error);
+                result1.textContent = error.toString();
+              });
+
+      callSecondJob();
+    </script>
+  </body>
+</html>
